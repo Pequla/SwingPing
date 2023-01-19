@@ -21,7 +21,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private Page<CachedData> rsp;
 
     public MainFrame() throws HeadlessException, IOException, InterruptedException {
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(800, 600);
         this.setTitle("Swing Ping");
@@ -40,8 +40,8 @@ public class MainFrame extends JFrame implements ActionListener {
         controls.add(prev);
         controls.add(current);
         controls.add(next);
-        controls.add(pane);
-        this.setContentPane(controls);
+        this.add(controls);
+        this.add(pane);
     }
 
     @SneakyThrows
