@@ -22,7 +22,7 @@ public class CustomDataModel implements TableModel {
     private static final Integer GUILD_COL = 6;
     private static final Integer CREATED_COL = 7;
 
-    public CustomDataModel(List<CachedData> body) throws IOException, InterruptedException {
+    public CustomDataModel(List<CachedData> body) {
         this.head = Arrays.asList("ID", "NAME", "UUID", "DISCORD ID", "TAG", "AVATAR", "GUILD ID", "CREATED AT");
         this.body = body;
     }

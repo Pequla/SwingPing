@@ -1,6 +1,9 @@
 package com.pequla;
 
+import com.pequla.model.CachedData;
+import com.pequla.model.Page;
 import com.pequla.service.DataService;
+import lombok.SneakyThrows;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,17 +16,17 @@ public class MainFrame extends JFrame implements ActionListener {
     private JButton prev;
     private JLabel current;
     private JButton next;
-
     private Integer pageNumber = 0;
     private Integer pageSize = 30;
+    private Page<CachedData> rsp;
 
     public MainFrame() throws HeadlessException, IOException, InterruptedException {
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(800, 600);
         this.setTitle("Swing Ping");
-
-        JTable table = new JTable(new CustomDataModel(DataService.getInstance().getCachedData(pageNumber, pageSize).getContent()));
+        this.rsp = DataService.getInstance().getCachedData(pageNumber, pageSize);
+        JTable table = new JTable(new CustomDataModel(rsp.getContent()));
         JScrollPane pane = new JScrollPane(table);
         pane.setPreferredSize(this.getSize());
 
@@ -38,17 +41,24 @@ public class MainFrame extends JFrame implements ActionListener {
         controls.add(current);
         controls.add(next);
         controls.add(pane);
-        this.add(controls);
+        this.setContentPane(controls);
     }
 
+    @SneakyThrows
     @Override
     public void actionPerformed(ActionEvent event) {
         if (prev.equals(event.getSource())) {
-            JOptionPane.showMessageDialog(this, "Prev button pressed");
+            if (rsp.getFirst()) return;
+            pageNumber -= 1;
+            rsp = DataService.getInstance().getCachedData(pageNumber, pageSize);
+            current.setText(Integer.toString(pageNumber));
             return;
         }
         if (next.equals(event.getSource())) {
-            JOptionPane.showMessageDialog(this, "Next button pressed");
+            if (rsp.getLast()) return;
+            pageNumber += 1;
+            rsp = DataService.getInstance().getCachedData(pageNumber, pageSize);
+            current.setText(Integer.toString(pageNumber));
         }
     }
 }

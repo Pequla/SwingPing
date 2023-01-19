@@ -1,10 +1,11 @@
 package com.pequla.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pequla.model.CachedData;
-import com.pequla.model.PagedData;
+import com.pequla.model.Page;
 
 import java.io.IOException;
 import java.net.URI;
@@ -52,15 +53,18 @@ public class DataService {
         return mapper.readValue(rsp.body(), CachedData.class);
     }
 
-    public PagedData getCachedData(Integer page, Integer size) throws IOException, InterruptedException {
+    public Page<CachedData> getCachedData(Integer page, Integer size) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create("https://cache.samifying.com/api/data?page=" + page +"&size="+size))
+                .uri(URI.create("https://cache.samifying.com/api/data?page=" + page + "&size=" + size))
                 .header("Content-Type", "application/json")
                 .GET()
                 .build();
         HttpResponse<String> rsp = client.send(req, HttpResponse.BodyHandlers.ofString());
         if (rsp.statusCode() != 200)
             throw new RuntimeException("Response code " + rsp.statusCode());
-        return mapper.readValue(rsp.body(), PagedData.class);
+
+        TypeReference<Page<CachedData>> type = new TypeReference<>() {
+        };
+        return mapper.readValue(rsp.body(), type);
     }
 }

@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PagedData {
-    private List<CachedData> content;
+public class Page<T> {
+    private List<T> content;
     private PageableModel pageable;
     private Boolean last;
     private Integer totalPages;
