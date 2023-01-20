@@ -1,29 +1,27 @@
-package com.pequla;
+package com.pequla.model;
 
-import com.pequla.model.CachedData;
+import com.pequla.model.rest.CachedData;
+import lombok.Setter;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
+@Setter
 public class CustomDataModel implements TableModel {
 
     private final List<String> head;
-    private final List<CachedData> body;
+    private List<CachedData> body;
 
-    private static final Integer ID_COL = 0;
-    private static final Integer NAME_COL = 1;
-    private static final Integer UUID_COL = 2;
-    private static final Integer DISCORD_COL = 3;
-    private static final Integer TAG_COL = 4;
-    private static final Integer AVATAR_COL = 5;
-    private static final Integer GUILD_COL = 6;
-    private static final Integer CREATED_COL = 7;
+    public static final Integer ID_COL = 0;
+    public static final Integer NAME_COL = 1;
+    public static final Integer TAG_COL = 2;
+    public static final Integer CREATED_COL = 3;
 
     public CustomDataModel(List<CachedData> body) {
-        this.head = Arrays.asList("ID", "NAME", "UUID", "DISCORD ID", "TAG", "AVATAR", "GUILD ID", "CREATED AT");
+        this.head = Arrays.asList("ID", "NAME", "TAG", "CREATED AT");
         this.body = body;
     }
 
@@ -57,12 +55,10 @@ public class CustomDataModel implements TableModel {
         CachedData data = body.get(row);
         if (col == ID_COL) return data.getId();
         if (col == NAME_COL) return data.getName();
-        if (col == UUID_COL) return data.getUuid();
-        if (col == DISCORD_COL) return data.getDiscordId();
         if (col == TAG_COL) return data.getTag();
-        if (col == AVATAR_COL) return data.getAvatar();
-        if (col == GUILD_COL) return data.getGuildId();
-        if (col == CREATED_COL) return data.getCreatedAt();
+        if (col == CREATED_COL) {
+            return data.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        }
         return "NULL";
     }
 

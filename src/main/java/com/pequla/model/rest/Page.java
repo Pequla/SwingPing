@@ -1,4 +1,4 @@
-package com.pequla.model;
+package com.pequla.model.rest;
 
 import lombok.Data;
 
