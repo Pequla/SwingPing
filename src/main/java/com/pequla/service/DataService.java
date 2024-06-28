@@ -55,7 +55,7 @@ public class DataService {
 
     public Page<CachedData> getCachedData(Integer page, Integer size) throws IOException, InterruptedException {
         HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create("https://cache.samifying.com/api/data?page=" + page + "&size=" + size))
+                .uri(URI.create("https://cache.samifying.com/api/data?sort=id,desc&page=" + page + "&size=" + size))
                 .header("Content-Type", "application/json")
                 .GET()
                 .build();

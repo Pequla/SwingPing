@@ -126,6 +126,7 @@ public class MainFrame extends JFrame implements ActionListener, ListSelectionLi
 
         if (table == null) {
             table = new JTable(tableModel);
+            table.getTableHeader().setReorderingAllowed(false);
             table.getSelectionModel().addListSelectionListener(this);
         } else {
             table.setModel(tableModel);
@@ -147,7 +148,16 @@ public class MainFrame extends JFrame implements ActionListener, ListSelectionLi
 
     @Override
     public void valueChanged(ListSelectionEvent event) {
-        Integer id = (Integer) table.getValueAt(table.getSelectedRow(), CustomDataModel.ID_COL);
-        System.out.println("Selected ID: " + id);
+        if (!event.getValueIsAdjusting()) {
+            try {
+                Integer id = (Integer) table.getValueAt(table.getSelectedRow(), CustomDataModel.ID_COL);
+                CachedData data = DataService.getInstance().getCachedDataForId(id);
+                PlayerFrame playerFrame = new PlayerFrame(data);
+                playerFrame.setLocationRelativeTo(this);
+                playerFrame.setVisible(true);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,e.getMessage(), e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
